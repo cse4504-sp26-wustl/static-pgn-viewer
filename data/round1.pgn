@@ -1,0 +1,52 @@
+[Event "tournament_001"]
+[Site "Unknown"]
+[Date "Unknown"]
+[Round "1"]
+
+[White "Alpha"]
+[Black "Bravo"]
+[WhiteElo "2400"]
+[BlackElo "2350"]
+[Result "1-0"]
+
+ 1-0
+
+[White "Charlie"]
+[Black "Delta"]
+[WhiteElo "2300"]
+[BlackElo "2250"]
+[Result "0-1"]
+
+ 0-1
+
+[White "Echo"]
+[Black "Foxtrot"]
+[WhiteElo "2200"]
+[BlackElo "2150"]
+[Result "*"]
+
+ *
+
+[White "Golf"]
+[Black "Hotel"]
+[WhiteElo "2100"]
+[BlackElo "2050"]
+[Result "*"]
+
+ *
+
+[White "India"]
+[Black "Juliet"]
+[WhiteElo "2000"]
+[BlackElo "1950"]
+[Result "*"]
+
+ *
+
+[White "Kilo"]
+[Black "Lima"]
+[WhiteElo "1900"]
+[BlackElo "1850"]
+[Result "*"]
+
+ *

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Static PGN Viewer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Static PGN Viewer</h1>
+      <p>Load one or more PGN round files and browse rounds, pairings, results, standings, and moves.</p>
+    </div>
+  </header>
+
+  <section class="toolbar">
+    <label class="file-button">
+      Select PGN files
+      <input id="pgn-files" type="file" accept=".pgn" multiple />
+    </label>
+    <button id="load-sample">Load sample rounds</button>
+    <button id="clear-data">Clear all</button>
+  </section>
+
+  <section class="search-panel">
+    <label>
+      Search player
+      <input id="search-player" type="search" placeholder="Filter by player name" />
+    </label>
+    <div id="status-message">No PGN loaded yet.</div>
+  </section>
+
+  <main class="main-grid">
+    <section class="panel">
+      <div class="panel-title">Rounds</div>
+      <div id="round-list" class="pill-list"></div>
+      <div class="panel-title">Games</div>
+      <div id="game-list" class="list"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">Game details</div>
+      <div id="game-detail" class="detail-card">
+        <p class="empty">Load PGN files and select a round/game.</p>
+      </div>
+      <div class="panel-title">Standings</div>
+      <div id="standings" class="list"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Works with local PGN file input. For GitHub Pages deployment, include your PGN files in the same folder or use the sample data files.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
