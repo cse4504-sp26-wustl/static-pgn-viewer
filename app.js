@@ -16,8 +16,9 @@ const elements = {
   status: document.getElementById("status-message"),
   loadSample: document.getElementById("load-sample"),
   clearButton: document.getElementById("clear-data"),
-  fileInput: document.getElementById("pgn-files"),
 };
+
+const staticRoundFiles = ["round1.pgn", "round2.pgn", "round3.pgn"];
 
 function normalizeText(text) {
   return text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
@@ -277,10 +278,9 @@ async function loadFiles(files) {
 }
 
 async function loadSampleData() {
-  const roundNames = ["round1.pgn", "round2.pgn", "round3.pgn"];
   const loadedGames = [];
 
-  for (const roundFile of roundNames) {
+  for (const roundFile of staticRoundFiles) {
     try {
       const response = await fetch(`data/${roundFile}`);
       if (!response.ok) throw new Error(response.statusText);
@@ -292,7 +292,7 @@ async function loadSampleData() {
   }
 
   if (loadedGames.length === 0) {
-    elements.status.textContent = "Cannot load sample data from this environment. Use the file input instead.";
+    elements.status.textContent = "Cannot load static data from this environment. Please verify the data files are present in /data/.";
     return;
   }
 
@@ -300,20 +300,17 @@ async function loadSampleData() {
   renderUI();
 }
 
-elements.fileInput.addEventListener("change", event => {
-  const target = event.target;
-  if (target.files?.length) {
-    clearState();
-    loadFiles(target.files);
-  }
-});
-
 elements.searchInput.addEventListener("input", event => {
   state.searchTerm = event.target.value.trim();
   renderUI();
 });
 
 elements.loadSample.addEventListener("click", async () => {
+  clearState();
+  await loadSampleData();
+});
+
+window.addEventListener("DOMContentLoaded", async () => {
   clearState();
   await loadSampleData();
 });
