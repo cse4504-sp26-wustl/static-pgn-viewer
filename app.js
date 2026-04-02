@@ -20,6 +20,14 @@ const elements = {
 
 const staticRoundFiles = ["round1.pgn", "round2.pgn", "round3.pgn"];
 
+const dataBasePath = (() => {
+  const path = window.location.pathname;
+  if (!path) return "data/";
+  if (path.endsWith("/")) return "./data/";
+  const dir = path.substring(0, path.lastIndexOf("/") + 1);
+  return `${dir}data/`;
+})();
+
 function normalizeText(text) {
   return text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
 }
@@ -279,15 +287,33 @@ async function loadFiles(files) {
 
 async function loadSampleData() {
   const loadedGames = [];
+  const candidatePaths = [
+    `data/`,
+    `./data/`,
+    dataBasePath,
+    `../data/`,
+  ];
 
   for (const roundFile of staticRoundFiles) {
-    try {
-      const response = await fetch(`data/${roundFile}`);
-      if (!response.ok) throw new Error(response.statusText);
-      const text = await response.text();
-      loadedGames.push(...parsePGNFile(roundFile, text));
-    } catch (error) {
-      console.warn(`Unable to fetch sample file ${roundFile}:`, error);
+    let success = false;
+
+    for (const basePath of candidatePaths) {
+      try {
+        const response = await fetch(`${basePath}${roundFile}`);
+        if (!response.ok) {
+          continue;
+        }
+        const text = await response.text();
+        loadedGames.push(...parsePGNFile(roundFile, text));
+        success = true;
+        break;
+      } catch (error) {
+        // try next path
+      }
+    }
+
+    if (!success) {
+      console.warn(`Unable to fetch sample file ${roundFile} from any candidate path`, candidatePaths);
     }
   }
 
