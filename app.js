@@ -292,15 +292,26 @@ async function loadSampleData() {
     `./data/`,
     dataBasePath,
     `../data/`,
+    `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, "/") || "/"}data/`,
+    `${window.location.origin}/data/`,
   ];
+
+  if (window.location.protocol === "file:") {
+    elements.status.textContent = "File:// protocol detected. Please run a local server (e.g., 'python -m http.server') to load data files.";
+    console.warn("file:// protocol detected; fetch may be blocked for local files.");
+    return;
+  }
 
   for (const roundFile of staticRoundFiles) {
     let success = false;
+    const pathErrors = [];
 
     for (const basePath of candidatePaths) {
       try {
-        const response = await fetch(`${basePath}${roundFile}`);
+        const attemptUrl = `${basePath}${roundFile}`;
+        const response = await fetch(attemptUrl);
         if (!response.ok) {
+          pathErrors.push(`${attemptUrl} -> ${response.status}`);
           continue;
         }
         const text = await response.text();
@@ -308,17 +319,18 @@ async function loadSampleData() {
         success = true;
         break;
       } catch (error) {
-        // try next path
+        pathErrors.push(`${basePath}${roundFile} -> ${error.message}`);
       }
     }
 
     if (!success) {
-      console.warn(`Unable to fetch sample file ${roundFile} from any candidate path`, candidatePaths);
+      console.warn(`Unable to fetch sample file ${roundFile}. Tried paths:`, pathErrors);
     }
   }
 
   if (loadedGames.length === 0) {
-    elements.status.textContent = "Cannot load static data from this environment. Please verify the data files are present in /data/.";
+    elements.status.textContent = "Cannot load static data from this environment. Please verify the data files are present in host-accessible data/ and that this is served over HTTP(S).";
+    console.error("PGN loading failed from all candidate paths:", candidatePaths);
     return;
   }
 
